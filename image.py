@@ -8,6 +8,8 @@ import time
 import numpy as np
 import argparse
 import cv2 as cv
+from Action.action_enum import Actions
+
 
 # parser = argparse.ArgumentParser(description='Action Recognition by OpenPose')
 # parser.add_argument('--video', help='Path to video file.')
@@ -15,7 +17,8 @@ import cv2 as cv
 
 # 导入相关模型
 estimator = load_pretrain_model('VGG_origin')
-action_classifier = load_action_premodel('Action/framewise_recognition.h5')
+# action_classifier = load_action_premodel('Action/framewise_recognition.h5')
+action_classifier = load_action_premodel('Action/framewise_recognition_under_scene.h5')
 
 # 参数初始化
 # realtime_fps = '0.0000'
@@ -39,7 +42,7 @@ action_classifier = load_action_premodel('Action/framewise_recognition.h5')
 # fps_count += 1
 # frame_count += 1
 
-randimg = 'C:/tmp/03.jpg'
+randimg = 'C:/tmp/14.jpg'
 show = cv.imread(randimg)
 
 # pose estimation
@@ -52,10 +55,27 @@ print('bboxes', bboxes)
 print('xcenter', xcenter)
 # 记录每一帧的所有关节点
 print('joints', joints)
+#print('pose', pose)
+
+joints_norm_per_frame = np.array(pose[4])
+print('joints_norm_per_frame', joints_norm_per_frame)
+j = 0
+joints_norm_single_person = joints_norm_per_frame[j*36:(j+1)*36]
+joints_norm_single_person = joints_norm_per_frame
+joints_norm_single_person = np.array(joints_norm_single_person).reshape(-1, 36)
+data = action_classifier.predict(joints_norm_single_person)
+print('data', data)
+pred = np.argmax(data)
+init_label = Actions(pred).name
+print('pred', pred, init_label)
+
 # recognize the action framewise
 show = framewise_recognize(pose, action_classifier)
 
 height, width = show.shape[:2]
+
+cv.putText(show, init_label, (5, height-10), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
+
 # 显示实时FPS值
 # if (time.time() - start_time) > fps_interval:
 #     # 计算这个interval过程中的帧数，若interval为1秒，则为FPS
