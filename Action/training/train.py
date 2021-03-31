@@ -28,7 +28,7 @@ class Actions(Enum):
     walk = 1
     operate = 2
     fall_down = 3
-    # run = 4
+    run = 4
 
 
 # Callback class to visialize training progress
@@ -106,7 +106,7 @@ def plot_confusion_matrix(cm, classes,
 
 
 # load data
-raw_data = pd.read_csv('data_with_scene.csv', header=0)
+raw_data = pd.read_csv('Action/training/data_under_scene.csv', header=0)
 dataset = raw_data.values
 # X = dataset[:, 0:36].astype(float)
 # Y = dataset[:, 36]

@@ -16,4 +16,5 @@ class Actions(Enum):
     walk = 1
     operate = 2
     fall_down = 3
-    # run = 4
+    run = 4
+    unknow = 5

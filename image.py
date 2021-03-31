@@ -42,7 +42,7 @@ action_classifier = load_action_premodel('Action/framewise_recognition_under_sce
 # fps_count += 1
 # frame_count += 1
 
-randimg = 'C:/tmp/14.jpg'
+randimg = 'C:/tmp/10.jpg'
 show = cv.imread(randimg)
 
 # pose estimation
@@ -55,7 +55,9 @@ print('bboxes', bboxes)
 print('xcenter', xcenter)
 # 记录每一帧的所有关节点
 print('joints', joints)
-#print('pose', pose)
+
+print('pose[4]', pose[4])
+print('pose[4].length', len(pose[4]))
 
 joints_norm_per_frame = np.array(pose[4])
 print('joints_norm_per_frame', joints_norm_per_frame)
@@ -66,8 +68,10 @@ joints_norm_single_person = np.array(joints_norm_single_person).reshape(-1, 36)
 data = action_classifier.predict(joints_norm_single_person)
 print('data', data)
 pred = np.argmax(data)
+print('pred', pred)
+print('Actions', Actions)
 init_label = Actions(pred).name
-print('pred', pred, init_label)
+print('init_label', init_label)
 
 # recognize the action framewise
 show = framewise_recognize(pose, action_classifier)
